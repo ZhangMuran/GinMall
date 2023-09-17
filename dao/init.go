@@ -50,12 +50,11 @@ func ConnectDb(connRead, connWrite string) {
 	sqlDB.SetMaxOpenConns(100) //设置数据库打开连接的最大数量
 	sqlDB.SetConnMaxLifetime(time.Second * 30) //设置连接可以重用的最长时间
 	
-	//进行MySQL主从的配置
+	//配置数据库连接对象_db以实现读写分离和负载均衡。
 	_ = _db.Use(dbresolver.Register(dbresolver.Config{
-			// `db2` 作为 sources，`db3`、`db4` 作为 replicas
-			Sources:  []gorm.Dialector{mysql.Open(connWrite)},                         // 写操作
+			Sources:  []gorm.Dialector{mysql.Open(connWrite)}, // 写操作
 			Replicas: []gorm.Dialector{mysql.Open(connRead), mysql.Open(connRead)}, // 读操作
-			Policy:   dbresolver.RandomPolicy{},                                      // sources/replicas 负载均衡策略
+			Policy:   dbresolver.RandomPolicy{}, // sources/replicas 负载均衡策略
 		}))
 	migrate()
 }
