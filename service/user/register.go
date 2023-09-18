@@ -10,9 +10,10 @@ import (
 
 //UserRegisterService 管理用户注册服务
 type UserRegisterService struct {
-	Nickname  string `form:"nickname" json:"nickname"`
+	Nickname  string `form:"nick_name" json:"nick_name"`
 	UserName  string `form:"user_name" json:"user_name"`
 	Password  string `form:"password" json:"password"`
+	Email     string `form:"email" json:"email"`
 }
 
 func (u UserRegisterService)Register(c context.Context) service.Response {
@@ -21,8 +22,8 @@ func (u UserRegisterService)Register(c context.Context) service.Response {
 	exist, err := userDao.ExistOrNotByUserName(u.UserName)
 	if err != nil {
 		return service.Response{
-			Errno:  service.Error,
-			ErrMsg: service.GetMsg(service.Error),
+			Errno:  service.ErrorDatabase,
+			ErrMsg: service.GetMsg(service.ErrorDatabase),
 		}
 	}
 	if exist {
@@ -32,10 +33,26 @@ func (u UserRegisterService)Register(c context.Context) service.Response {
 		}
 	}
 
+	// 判断邮箱是否重复
+	exist, err = userDao.ExistOrNotByEmail(u.Email)
+	if err != nil {
+		return service.Response{
+			Errno:  service.ErrorDatabase,
+			ErrMsg: service.GetMsg(service.ErrorDatabase),
+		}
+	}
+	if exist {
+		return service.Response{
+			Errno:  service.ErrorEmailExist,
+			ErrMsg: service.GetMsg(service.ErrorEmailExist),
+		}
+	}
+
 	// 创建用户
 	user := model.User{
 		Nickname: u.Nickname,
 		UserName: u.UserName,
+		Email:    u.Email,
 		Status:   model.Active,
 	}
 	// 给密码加密

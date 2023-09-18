@@ -20,13 +20,29 @@ func NewUserDaobyDB(db *gorm.DB) *UserDao {
 }
 
 // ExistOrNotByUserName 判断UserName是否已经存在
-func (dao *UserDao) ExistOrNotByUserName(userName string) (exist bool, err error) {
-	user := &model.User{}
-	err = dao.DB.Model(&model.User{}).Where("user_name=?", userName).Find(&user).Error
-	if err == gorm.ErrRecordNotFound || user == nil {
-		return false, err
+func (dao *UserDao) ExistOrNotByUserName(userName string) (bool, error) {
+	var count int64
+	err := dao.DB.Model(&model.User{}).Where("user_name=?", userName).Count(&count).Error
+	if err != nil {
+		return true, err
 	}
-	return true, err
+	if count != 1 {
+		return false, nil
+	}
+	return true, nil
+}
+
+// ExistOrNotByEmail 判断Email是否已经存在
+func (dao *UserDao) ExistOrNotByEmail(Email string) (bool, error) {
+	var count int64
+	err := dao.DB.Model(&model.User{}).Where("email=?", Email).Count(&count).Error
+	if err != nil {
+		return true, err
+	}
+	if count != 1 {
+		return false, nil
+	}
+	return true, nil
 }
 
 // CreateUser 创建用户

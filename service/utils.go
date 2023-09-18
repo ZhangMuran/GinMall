@@ -15,7 +15,8 @@ const (
 
 	//用户注册
 	ErrorUserExist      = 100
-	ErrorFailEncryption = 101
+	ErrorEmailExist     = 101
+	ErrorFailEncryption = 102
 )
 
 var MsgFlags = map[int]string {
@@ -27,6 +28,7 @@ var MsgFlags = map[int]string {
 
 	//用户注册
 	ErrorUserExist:      "用户名重复",
+	ErrorEmailExist:     "邮箱重复",
 	ErrorFailEncryption: "密码加密失败",
 }
 

@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 
+	"github.com/ZhangMuran/GinMall/controller/user"
 	"github.com/ZhangMuran/GinMall/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,7 @@ func SetupRouter() *gin.Engine {
 		})
 		
 		// 用户注册
-		userGroup.POST("register")
+		userGroup.POST("register", user.UserRegister)
 	}
 
 	return r
