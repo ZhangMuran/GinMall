@@ -19,6 +19,8 @@ func SetupRouter() *gin.Engine {
 		
 		// 用户注册
 		userGroup.POST("register", user.UserRegister)
+		//用户登录
+		userGroup.POST("login", user.UserLogin)
 	}
 
 	return r

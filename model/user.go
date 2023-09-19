@@ -47,3 +47,9 @@ func (user *User) SetPassword(password string) error {
 	user.PasswordDigest = string(bytes)
 	return nil
 }
+
+// CheckPassword 校验密码
+func (u *User) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordDigest), []byte(password))
+	return err == nil
+}

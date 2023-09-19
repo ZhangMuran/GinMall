@@ -20,9 +20,9 @@ func NewUserDaobyDB(db *gorm.DB) *UserDao {
 }
 
 // ExistOrNotByUserName 判断UserName是否已经存在
-func (dao *UserDao) ExistOrNotByUserName(userName string) (bool, error) {
+func (dao *UserDao) ExistOrNotByUserName(userName string, user *model.User) (bool, error) {
 	var count int64
-	err := dao.DB.Model(&model.User{}).Where("user_name=?", userName).Count(&count).Error
+	err := dao.DB.Model(&model.User{}).Where("user_name=?", userName).Find(user).Count(&count).Error
 	if err != nil {
 		return true, err
 	}
