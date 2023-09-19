@@ -49,3 +49,12 @@ func (dao *UserDao) ExistOrNotByEmail(Email string) (bool, error) {
 func (dao *UserDao) CreateUser(user *model.User) error {
 	return dao.DB.Model(&model.User{}).Create(user).Error;
 }
+
+// GetUserById 根据id获取user
+func (dao *UserDao) GetUserById(id uint, user *model.User) error {
+	return dao.DB.Model(&model.User{}).Where("id=?", id).First(user).Error
+}
+
+func (dao *UserDao) UpdateUserById(id uint, user *model.User) error {
+	return dao.DB.Model(&model.User{}).Where("id=?", id).Updates(user).Error
+}

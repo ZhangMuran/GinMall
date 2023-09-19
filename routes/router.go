@@ -21,6 +21,13 @@ func SetupRouter() *gin.Engine {
 		userGroup.POST("register", user.UserRegister)
 		//用户登录
 		userGroup.POST("login", user.UserLogin)
+
+		authed := userGroup.Group("/") // 需要登录保护
+		authed.Use(middleware.AuthMiddleware())
+		{
+			// 用户操作
+			authed.PUT("update", user.UserUpdate)
+		}
 	}
 
 	return r
