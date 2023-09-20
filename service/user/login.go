@@ -62,8 +62,8 @@ func (u *UserLoginService)Login(ctx context.Context) utils.Response {
 	token, err := utils.GenerateToken(user.ID, u.UserName, 0)
 	if err != nil {
 		return utils.Response{
-			Errno: utils.Success,
-			ErrMsg: utils.GetMsg(utils.Success),
+			Errno: utils.ErrAuthToken,
+			ErrMsg: utils.GetMsg(utils.ErrAuthToken),
 		}
 	}
 

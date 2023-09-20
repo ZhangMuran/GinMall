@@ -27,6 +27,8 @@ func SetupRouter() *gin.Engine {
 		{
 			// 用户操作
 			authed.PUT("update", user.UserUpdate)
+			// 发送邮件
+			authed.POST("sending-email", user.SendEmail)
 		}
 	}
 

@@ -21,6 +21,7 @@ const (
 	ErrorPassword       = 104
 	ErrAuthToken        = 105
 	ErrTokenTimeOut     = 106
+	ErrSendEmail        = 107
 )
 
 var MsgFlags = map[int]string {
@@ -38,6 +39,7 @@ var MsgFlags = map[int]string {
 	ErrorPassword:       "登录密码错误",
 	ErrAuthToken:        "签发Token失败",
 	ErrTokenTimeOut:     "token 过期",
+	ErrSendEmail:        "邮件发送失败",
 }
 
 func GetMsg(code int) string {

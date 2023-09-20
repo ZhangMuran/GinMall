@@ -45,3 +45,43 @@ func ParseToken(token string) (*Claims, error) {
 	}
 	return nil, err
 }
+
+type EmailClaims struct {
+	UserID        uint   `json:"user_id"`
+	Email         string `json:"email"`
+	Password      string `json:"password"`
+	OperationType uint   `json:"operation_type"`
+	jwt.StandardClaims
+}
+
+// GenerateEmailToken 签发token
+func GenerateEmailToken(id, Operation uint, email, password string) (string, error) {
+	nowTime := time.Now()
+	expireTime := nowTime.Add(24 * time.Hour) //过期时间
+	claims := EmailClaims{
+		UserID: id,
+		Email: email,
+		Password: password,
+		OperationType: Operation,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expireTime.Unix(),
+			Issuer: "Zmr-QQMail",
+		},
+	}
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := tokenClaims.SignedString(jwtSecret)
+	return token, err
+}
+
+// ParseToken 验证用户token
+func ParseEmailToken(token string) (*EmailClaims, error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &EmailClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+	if tokenClaims != nil {
+		if claims, ok := tokenClaims.Claims.(*EmailClaims); ok && tokenClaims.Valid {
+			return claims, nil
+		}
+	}
+	return nil, err
+}

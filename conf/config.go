@@ -1,7 +1,6 @@
 package conf
 
 import (
-	_"fmt"
 	"strings"
 
 	"github.com/ZhangMuran/GinMall/dao"
@@ -17,6 +16,11 @@ var (
 	DbHost string
 	DbPort string
 	DbName string
+
+	ValidEmail string
+	SmtpHost string
+	SmtpEmail string
+	SmtpPass string
 )
 
 func Init() {
@@ -27,6 +31,7 @@ func Init() {
 
 	LoadServer(file)
 	LoadMySQL(file)
+	LoadEmail(file)
 
 	// 加载MySQL
 	pathRead := strings.Join([]string{DbUser, ":", DbPassWord, "@tcp(", DbHost, ":", DbPort, ")/", DbName, "?charset=utf8&parseTime=true"}, "")
@@ -45,4 +50,11 @@ func LoadMySQL(file *ini.File) {
 	DbHost     = file.Section("mysql").Key("DbHost").String()
 	DbName     = file.Section("mysql").Key("DbName").String()
 	DbPort     = file.Section("mysql").Key("DbPort").String()
+}
+
+func LoadEmail(file *ini.File) {
+	ValidEmail = file.Section("email").Key("ValidEmail").String()
+	SmtpHost = file.Section("email").Key("SmtpHost").String()
+	SmtpEmail = file.Section("email").Key("SmtpEmail").String()
+	SmtpPass = file.Section("email").Key("SmtpPass").String()
 }
